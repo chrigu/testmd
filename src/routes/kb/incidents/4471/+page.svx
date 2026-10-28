@@ -2,8 +2,8 @@
 layout: runbook
 title: '#4471 · dates parse mm/dd in eu locales'
 owner: support desk
-status: known
-reviewed: 2026-09-30
+status: superseded
+reviewed: '2026-10-28'
 ---
 
 <script>
@@ -11,6 +11,13 @@ reviewed: 2026-09-30
   import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
   import Callout from '#lib/kb/Callout.svelte';
 </script>
+
+<Callout kind="warn">
+This historical account is superseded by the <a href="/kb/incidents/4471-review">signed review</a>.
+It separates the parser and booking-v3 hint reports and records the desk's parser-fix and
+form-retirement outcomes. The original account below is preserved as historical evidence,
+not current guidance.
+</Callout>
 
 Since April, people have told us their bookings land on the wrong day: a month flipped. By
 4 October the desk had **412 reports**.

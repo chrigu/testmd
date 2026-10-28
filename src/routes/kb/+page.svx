@@ -17,6 +17,11 @@ Start with [triage](/kb/triage/dedupe) if you are new on the desk.
 
 ## Pages
 
+Current #4471 analysis: [signed review and desk outcomes](/kb/incidents/4471-review).
+The [review source](https://github.com/chrigu/testmd/blob/main/src/routes/kb/incidents/4471-review/+page.svx)
+and [rendered page](https://github.com/chrigu/testmd/blob/main/rendered/kb/incidents/4471-review/index.html)
+are published together in this repository.
+
 <KbIndex />
 
 ## Writing a page
