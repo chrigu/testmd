@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 review · two date paths, not one fix'
 owner: chrigu
-status: investigated
+status: desk-closed
 reviewed: '2026-10-28'
 signature: 'Pi for chrigu · S01E03 · 2026-10-28'
 ---
@@ -27,15 +27,27 @@ that build the desk's tables. It is an export snapshot, not a claim about the cu
 The build date is not a later data-refresh date. Rebuild with a fresh export before using
 these counts as current.
 
+## Engineering update — 5 October 2026
+
+The [Challenge page](https://hq.mega.dev/challenges/what-it-shows) now reports
+“#4471 · closed 05 oct”:
+
+- **Parser: fixed.** Engineering reports `fix(dates): parse dd/mm for eu locales`.
+- **Hint: won't fix.** The booking-v3 form was retired; the desk does not report a hint fix.
+
+These are different resolutions. A retired form is not evidence that its hint was repaired.
+The outcomes are reported by the desk, not independently verified by our local rendering
+tests. The export counts below remain historical; this update adds no new report records.
+
 ## Separate tickets
 
-The parser reads numeric dates month first. For day-first tenants, an intended day/month
+At export time, the parser read numeric dates month first. For day-first tenants, an intended day/month
 value can become a month/day value. This affects app and email reports, and booking-v2
-form reports. The parser ticket needs a locale-aware parsing fix, not a different label.
+form reports. Engineering now reports a locale-aware parser fix, not just a different label.
 
-The other path is booking-v3's form: its hint says MM/DD/YYYY while the form interprets
-input in the tenant's day-first order. Fix the hint and input interpretation together.
-Changing the shared parser alone does not resolve that mismatch.
+The other path was booking-v3's form: its hint said MM/DD/YYYY while the form interpreted
+input in the tenant's day-first order. A repair would need the hint and interpretation to
+agree. Engineering instead retired the form. The parser fix did not repair that hint.
 
 The table uses tenant locale and booking-form version, not browser locale or intake tags.
 Locale order is obtained through Intl.DateTimeFormat, not a hard-coded country list.
@@ -77,6 +89,8 @@ Ask for the original input, intended date, saved value, rendered invite, tenant 
 timezone, and a reproducible sequence before declaring another root cause or a completed fix.
 
 The proposed triage change and this review do not alter the live ticket system.
-Recheck the current desk before closing the review or quoting these numbers as current.
+The desk reports #4471 closed, with a parser fix and a separate won't-fix outcome for the
+retired form. Closing this review does not establish the mechanism of every unexplained
+report. Recheck the current desk before quoting these historical numbers as current.
 
 <RenderStamp {signature} />

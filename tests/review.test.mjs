@@ -71,6 +71,15 @@ test('the real rendered page includes computed counts, styles, and the derived s
   assert.ok(css.includes('--bg'));
 });
 
+test('desk closure preserves the difference between a fix and retirement', () => {
+  assert.match(text, /Parser: fixed/);
+  assert.match(text, /fix\(dates\): parse dd\/mm for eu locales/);
+  assert.match(text, /Hint: won['’]t fix/);
+  assert.match(text, /booking-v3 form was retired/);
+  assert.match(text, /not independently verified by our local rendering tests/);
+  assert.ok(html.includes('https://hq.mega.dev/challenges/what-it-shows'));
+});
+
 test('the KB index discovers the new review page', () => {
   const index = readFileSync(new URL('../rendered/kb/index.html', import.meta.url), 'utf8');
   assert.ok(index.includes('/kb/incidents/4471-review'));
