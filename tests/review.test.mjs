@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { uniqueById, groupByCause, causeOf, sameCause, dayFirst } from '../src/lib/kb/causes.ts';
 import { deskRef } from '../src/lib/kb/desk-ref.ts';
 
@@ -82,5 +82,26 @@ test('desk closure preserves the difference between a fix and retirement', () =>
 
 test('the KB index discovers the new review page', () => {
   const index = readFileSync(new URL('../rendered/kb/index.html', import.meta.url), 'utf8');
-  assert.ok(index.includes('/kb/incidents/4471-review'));
+  assert.ok(index.includes('href="incidents/4471-review/"'));
+});
+
+test('static navigation works under the GitHub Pages repository subpath', () => {
+  const base = 'https://chrigu.github.io/testmd/';
+  const localRoot = new URL('../rendered/', import.meta.url);
+  const checkPage = (path) => {
+    const page = readFileSync(new URL(path, localRoot), 'utf8');
+    for (const [, href] of page.matchAll(/href="([^"]+)"/g)) {
+      if (/^https?:/.test(href)) continue;
+      const url = new URL(href, base + path);
+      assert.ok(url.href.startsWith(base), 'link escapes /testmd/: ' + href);
+      const local = url.pathname.slice(new URL(base).pathname.length);
+      assert.ok(existsSync(new URL(local, localRoot)), 'missing link target: ' + local);
+    }
+  };
+  for (const path of [
+    'index.html', 'kb/index.html', 'kb/incidents/4471-review/index.html',
+    'kb/incidents/4471/index.html', 'kb/triage/dedupe/index.html',
+    'kb/decisions/0001-dedupe-by-subject/index.html',
+  ]) checkPage(path);
+  assert.ok(existsSync(new URL('.nojekyll', localRoot)));
 });
