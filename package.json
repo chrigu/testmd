@@ -1,0 +1,16 @@
+{
+  "name": "support-kb-review",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build && node scripts/render.mjs",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "audit": "node scripts/audit.mjs"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "mdsvex": "0.12.8",
+    "svelte": "5.57.3",
+    "vite": "8.3.5"
+  }
+}

@@ -1,0 +1,82 @@
+---
+layout: runbook
+title: '#4471 review · two date paths, not one fix'
+owner: chrigu
+status: investigated
+reviewed: '2026-10-28'
+signature: 'Pi for chrigu · S01E03 · 2026-10-28'
+---
+
+<script>
+  import IncidentReview from '#lib/kb/IncidentReview.svelte';
+  import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+<Callout kind="warn">
+The original incident's “one issue, one fix queued” statement is not a safe diagnosis.
+The executable tenant/form model identifies two different date-handling paths.
+Some report bodies remain unexplained by that model.
+</Callout>
+
+## Scope and source of truth
+
+This review uses the exported report records, tenant directory, desk notes, and the functions
+that build the desk's tables. It is an export snapshot, not a claim about the current queue.
+The build date is not a later data-refresh date. Rebuild with a fresh export before using
+these counts as current.
+
+## Separate tickets
+
+The parser reads numeric dates month first. For day-first tenants, an intended day/month
+value can become a month/day value. This affects app and email reports, and booking-v2
+form reports. The parser ticket needs a locale-aware parsing fix, not a different label.
+
+The other path is booking-v3's form: its hint says MM/DD/YYYY while the form interprets
+input in the tenant's day-first order. Fix the hint and input interpretation together.
+Changing the shared parser alone does not resolve that mismatch.
+
+The table uses tenant locale and booking-form version, not browser locale or intake tags.
+Locale order is obtained through Intl.DateTimeFormat, not a hard-coded country list.
+Duplicate export rows count once by report ID; different IDs remain distinct reports,
+including corrections or follow-ups. Counts describe reports, not affected people.
+
+<IncidentReview />
+
+## Why the merge hid this
+
+[Decision 0001](/kb/decisions/0001-dedupe-by-subject) accepted subject-only deduplication.
+The [triage page](/kb/triage/dedupe) still tells the desk to merge matching subjects and to
+merge when uncertain. Its interactive example already compares tenant/form causes instead.
+The words and executable demonstration disagree.
+
+Subject similarity can help locate candidates, but it cannot establish a shared cause.
+Read the body, resolve the tenant's locale and form, and compare the actual failure path.
+Matching subjects can conceal different failures; different subjects can describe the same
+failure. Missing tenant information or conflicting symptoms need investigation, not a
+forced merge into the largest ticket.
+
+Do not rewrite accepted decision 0001. A replacement decision should record why subject-only
+merging failed, the evidence needed before merging, and how unresolved cases stay visible.
+
+## Received is not merged
+
+<QueueTimeline ticket={4471} />
+
+The chart separately counts when reports arrived and when the desk merged them.
+A merge backlog is not a sudden increase in new reports. The export records reports from
+April onward, including later reports after the initial merge. Known is not fixed:
+customers still describe missed visits, manual rescheduling, and workarounds.
+
+## Desk handoff
+
+Keep the parser and booking-v3 hint tickets separate. Keep the evidence exceptions visible
+inside the parser investigation; their current routing is not proof of their mechanism.
+Ask for the original input, intended date, saved value, rendered invite, tenant configuration,
+timezone, and a reproducible sequence before declaring another root cause or a completed fix.
+
+The proposed triage change and this review do not alter the live ticket system.
+Recheck the current desk before closing the review or quoting these numbers as current.
+
+<RenderStamp {signature} />
